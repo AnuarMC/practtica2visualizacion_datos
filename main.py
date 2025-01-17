@@ -20,26 +20,21 @@ data = load_data(data_path)
 
 def show_initial_data_overview(df):
     st.subheader("Información General del Dataset")
-    # Conteo de filas y columnas
     st.write(f"**Total de Filas:** {df.shape[0]} | **Total de Columnas:** {df.shape[1]}")
     
-    # Conteo de valores nulos
     st.write("**Valores nulos por columna:**")
     missing_values = df.isna().sum()
     st.write(missing_values)
     
-    # Descripción estadística
     st.write("**Descripción Estadística (variables numéricas):**")
     st.write(df.describe())
     
-    # Vista parcial del dataset
     st.write("**Vista de los primeros registros:**")
     st.dataframe(df.head(10))
 
 def sidebar_filters(df):
     st.sidebar.title("Filtros Adicionales")
 
-    # Filtro de ciudad
     if "City" in df.columns:
         unique_cities = df["City"].dropna().unique().tolist()
         selected_cities = st.sidebar.multiselect(
@@ -50,7 +45,6 @@ def sidebar_filters(df):
     else:
         selected_cities = []
     
-    # Filtro de género
     if "Gender" in df.columns:
         unique_genders = df["Gender"].dropna().unique().tolist()
         selected_genders = st.sidebar.multiselect(
@@ -61,7 +55,6 @@ def sidebar_filters(df):
     else:
         selected_genders = []
     
-    # Filtro de rango de edad
     if "Age" in df.columns:
         min_age = int(df["Age"].min()) if not df["Age"].isna().all() else 0
         max_age = int(df["Age"].max()) if not df["Age"].isna().all() else 100
@@ -74,7 +67,6 @@ def sidebar_filters(df):
     else:
         age_range = (0, 100)
     
-    # Aplicar filtros
     df_filtered = df.copy()
     
     if "City" in df.columns:
@@ -84,7 +76,6 @@ def sidebar_filters(df):
     if "Age" in df.columns:
         df_filtered = df_filtered[(df_filtered["Age"] >= age_range[0]) & (df_filtered["Age"] <= age_range[1])]
     
-    # Filtro adicional: Depresión
     if "Depression" in df.columns:
         depression_option = st.sidebar.selectbox("Filtrar por Depresión:", ["Todos", "Con Depresión", "Sin Depresión"])
         if depression_option == "Con Depresión":
@@ -170,7 +161,6 @@ def plot_family_history_depression(df):
     st.pyplot(plt.gcf())
     plt.close()
 
-
 def plot_correlation_heatmap(df):
     numeric_cols = df.select_dtypes(include=[np.number]).columns
     corr_matrix = df[numeric_cols].corr()
@@ -208,7 +198,6 @@ def plot_suicidal_depression(df):
     plt.ylabel("Cantidad de Estudiantes")
     st.pyplot(plt.gcf())
     plt.close()
-
 
 def plot_scatter_age_cgpa_depression(df):
     plt.figure(figsize=(8, 5))
